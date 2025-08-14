@@ -1,0 +1,110 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Build output
+dist/
+build/
+out/
+.tmp/
+.temp/
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# TypeScript
+*.tsbuildinfo
+.tscache/
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+.jest/
+
+# Husky (if using older versions)
+.husky/_
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Config files with secrets (keep templates)
+config/local.json
+config/local-*.json
+config/secrets.json
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.cert
+
+# Docker
+.dockerignore
+Dockerfile.local
+
+# Backup files
+*.backup
+*.bak
+*.orig
+
+# Package manager lock files (optional - choose one)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Optional: Prisma (if you add it later)
+prisma/migrations/.DS_Store
+prisma/migrations/*/migrations_lock.toml
