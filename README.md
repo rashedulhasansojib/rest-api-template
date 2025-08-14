@@ -223,26 +223,69 @@ git commit -m "fix: resolve database connection issue"
 git commit -m "docs: update API documentation"
 ```
 
+### Common Types
+
+| Type         | Description                                                                        |
+| ------------ | ---------------------------------------------------------------------------------- |
+| **feat**     | A new feature                                                                      |
+| **fix**      | A bug fix                                                                          |
+| **docs**     | Documentation changes only                                                         |
+| **style**    | Code style changes (formatting, missing semi-colons, etc.) — no code logic changes |
+| **refactor** | Code change that neither fixes a bug nor adds a feature                            |
+| **perf**     | Performance improvements                                                           |
+| **test**     | Adding or updating tests                                                           |
+| **build**    | Changes to build process or dependencies                                           |
+| **ci**       | CI/CD configuration changes                                                        |
+| **chore**    | Maintenance tasks not related to src or tests (e.g., dependency updates)           |
+| **revert**   | Reverting a previous commit                                                        |
+
+### Examples
+
+#### ✅ Valid
+
+- feat(auth): add JWT refresh token support
+- fix(user): prevent crash when email is missing
+- docs(readme): update installation guide
+- style(api): format code using prettier
+- refactor(db): migrate from mongoose to prisma
+- perf(api): improve query performance
+- test(user): add password reset unit tests
+- chore(deps): update express to v5
+- ci(github): add lint check workflow
+- revert: revert "feat(auth): add JWT refresh token support"
+
+### Guidelines
+
+- **Use the imperative mood**: "add" not "added" or "adds".
+- **Limit summary to 72 characters**.
+- **Use a scope** (inside parentheses) to indicate the area of change.
+- **Body** should explain _what_ and _why_, not _how_.
+- **Footer** is used for breaking changes or referencing issues.
+
 ## 🔍 Code Quality Tools Setup
 
 ### ESLint Rules
 
 - **Strict TypeScript** checking with type information
-- **Prettier integration** for formatting
+- **Prettier integration** via `eslint-config-prettier` and `eslint-plugin-prettier`
 - **Custom rules** for unused variables, explicit types
 - **Modern JavaScript** features (nullish coalescing, optional chaining)
+- **Consistent type imports** enforcement
+- **Test file exceptions** for flexibility
 
 ### Prettier Integration
 
 - **Automatic formatting** on save (if IDE configured)
 - **Pre-commit formatting** via lint-staged
 - **Consistent code style** across the project
+- **ESLint integration** for unified workflow
 
 ### Husky Git Hooks
 
 - **Pre-commit**: Type check + lint staged files
 - **Pre-push**: Build verification
 - **Commit-msg**: Conventional commit validation
+- **Modern structure** (v9+) without legacy `_` directory
 
 ## 📚 Dependencies Explained
 
@@ -264,12 +307,15 @@ git commit -m "docs: update API documentation"
 
 - **typescript**: TypeScript compiler
 - **ts-node-dev**: Development server with hot reload
-- **eslint**: Code linting
+- **eslint**: Code linting with TypeScript support
 - **prettier**: Code formatting
-- **husky**: Git hooks
+- **eslint-config-prettier**: Disables conflicting ESLint rules
+- **eslint-plugin-prettier**: Runs Prettier as ESLint rule
+- **husky**: Git hooks (v9+ with simplified structure)
 - **lint-staged**: Run linters on staged files
 - **commitlint**: Commit message linting
 - **rimraf**: Cross-platform rm -rf
+- **typescript-eslint**: TypeScript ESLint integration
 
 ## 🚀 Next Steps
 

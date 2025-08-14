@@ -2,7 +2,14 @@ import mongoose from 'mongoose';
 import config from 'config';
 import logger from './logger';
 
+mongoose.set('strictQuery', true);
+
 export const connectDB = async (): Promise<void> => {
+  if (mongoose.connection.readyState >= 1) {
+    logger.info('MongoDB already connected');
+    return;
+  }
+
   try {
     const mongoUri = config.get<string>('mongoUri');
     await mongoose.connect(mongoUri);
@@ -14,6 +21,11 @@ export const connectDB = async (): Promise<void> => {
 };
 
 export const disconnectDB = async (): Promise<void> => {
+  if (mongoose.connection.readyState === 0) {
+    logger.info('MongoDB already disconnected');
+    return;
+  }
+
   try {
     await mongoose.disconnect();
     logger.info('Disconnected from MongoDB');
@@ -22,3 +34,14 @@ export const disconnectDB = async (): Promise<void> => {
     throw error;
   }
 };
+
+// Optional: graceful shutdown
+process.on('SIGINT', async () => {
+  await disconnectDB();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await disconnectDB();
+  process.exit(0);
+});
