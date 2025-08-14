@@ -8,7 +8,8 @@ A production-ready REST API template built with Express.js, TypeScript, and comp
 - **TypeScript** - Type-safe JavaScript with strict configuration
 - **MongoDB** - Database integration with Mongoose
 - **Pino** - High-performance JSON logger
-- **Zod** - TypeScript-first schema validation
+- **Zod** - TypeScript-first schema validation with async middleware
+- **Request Validation** - Comprehensive validation for body, query, and params
 - **JWT** - JSON Web Token authentication
 - **Code Quality Tools** - ESLint, Prettier, Husky, lint-staged
 - **Conventional Commits** - Standardized commit messages
@@ -58,7 +59,7 @@ npm install -D @types/body-parser @types/config @types/cors @types/express @type
     "module": "ESNext",
     "moduleResolution": "node",
     "lib": ["ES2020"],
-    "outDir": "./dist",
+    "outDir": "build",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
@@ -148,16 +149,18 @@ Automatically formats and lints staged files:
 rest-api/
 ├── src/
 │   ├── index.ts              # Main application entry
+│   ├── middleware/
+│   │   └── validateResource.ts # Zod validation middleware
 │   ├── routes/
 │   │   └── index.ts          # API routes
 │   └── utils/
 │       ├── logger.ts         # Pino logger setup
 │       └── database.ts       # MongoDB connection
 ├── config/
-│   ├── default.json          # Default configuration
+│   ├── default.ts            # Default configuration
 │   └── production.json       # Production configuration
 ├── .husky/                   # Git hooks
-├── dist/                     # Build output (generated)
+├── build/                     # Build output (generated)
 ├── eslint.config.mts         # ESLint configuration
 ├── tsconfig.json             # TypeScript configuration
 ├── .prettierrc               # Prettier configuration
@@ -306,7 +309,7 @@ git commit -m "docs: update API documentation"
 ### Development Dependencies
 
 - **typescript**: TypeScript compiler
-- **ts-node-dev**: Development server with hot reload
+- **tsx**: Development server with hot reload
 - **eslint**: Code linting with TypeScript support
 - **prettier**: Code formatting
 - **eslint-config-prettier**: Disables conflicting ESLint rules
@@ -317,15 +320,118 @@ git commit -m "docs: update API documentation"
 - **rimraf**: Cross-platform rm -rf
 - **typescript-eslint**: TypeScript ESLint integration
 
+## Logger
+
+### Log Levels
+
+Controlled by config.get('logLevel') or defaults to 'info'.
+
+### Pino supports:
+
+| Level   | Description                                | Severity |
+| ------- | ------------------------------------------ | -------- |
+| `fatal` | Critical error that causes the app to exit | Highest  |
+| `error` | Application error requiring attention      | High     |
+| `warn`  | Unexpected behavior, but app still runs    | Medium   |
+| `info`  | General operational information            | Normal   |
+| `debug` | Detailed debugging information             | Low      |
+| `trace` | Most detailed logging, including internals | Lowest   |
+
+### Example usage:
+
+```bash
+  logger.debug('Debugging details');
+  logger.info('Server started on port 3000');
+  logger.warn('Something unexpected happened');
+  logger.error('Failed to connect to DB');
+  logger.fatal('Critical failure, shutting down');
+```
+
+### Rotating Logs (optional for production)
+
+Daily or size-limited log rotation:
+
+```bash
+npm i pino-rotating-file
+```
+
+Then replace the file target with rotating target:
+
+```bash
+{
+  target: 'pino-rotating-file',
+  options:
+  {
+    file: path.join(logDir, 'app.log'),
+    frequency: '1d', # rotate daily
+    size: '10M', # max size per file
+    compress: true, # compress old files
+  },
+  level: 'info',
+}
+```
+
+## 🔧 Request Validation
+
+The project includes a robust validation middleware using Zod for type-safe request validation.
+
+### Usage Example
+
+```typescript
+import { z } from 'zod';
+import validate from './middleware/validateResource.js';
+
+// Define validation schema
+const userSchema = {
+  body: z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email format'),
+    age: z.number().min(18, 'Must be at least 18 years old'),
+  }),
+  params: z.object({
+    id: z.string().uuid('Invalid user ID format'),
+  }),
+  query: z.object({
+    include: z.string().optional(),
+  }),
+};
+
+// Apply validation middleware
+app.put('/users/:id', validate(userSchema), updateUser);
+```
+
+### Validation Features
+
+- **Flexible validation**: Validate body, query, and params independently
+- **Async-safe**: Uses `parseAsync` for future-proofing with async refinements
+- **Structured errors**: Returns detailed error responses with field paths and messages
+- **Type-safe**: Full TypeScript support with proper type inference
+- **Production-ready**: Handles both validation errors and unexpected errors gracefully
+
+### Error Response Format
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": [
+    {
+      "path": "body.email",
+      "message": "Invalid email format",
+      "code": "invalid_string"
+    }
+  ]
+}
+```
+
 ## 🚀 Next Steps
 
 1. **Add Authentication**: Implement JWT-based auth routes
-2. **Add Validation**: Use Zod schemas for request validation
-3. **Add Testing**: Set up Jest or Vitest for unit tests
-4. **Add Documentation**: Generate API docs with Swagger
-5. **Add Monitoring**: Implement health checks and metrics
-6. **Add Rate Limiting**: Protect against abuse
-7. **Add CORS Configuration**: Configure for your frontend
+2. **Add Testing**: Set up Jest or Vitest for unit tests
+3. **Add Documentation**: Generate API docs with Swagger
+4. **Add Monitoring**: Implement health checks and metrics
+5. **Add Rate Limiting**: Protect against abuse
+6. **Add CORS Configuration**: Configure for your frontend
 
 ## 📄 License
 

@@ -26,7 +26,7 @@ const startServer = async (): Promise<void> => {
   try {
     await connectDB();
     app.listen(port, () => {
-      logger.info(`Server running on port ${port}`);
+      logger.info(`Server running on port http://localhost:${port}`);
     });
   } catch (error) {
     logger.error(`Failed to start server: ${(error as Error).message}`);
