@@ -45,7 +45,7 @@ npm install express zod config cors mongoose pino pino-pretty dayjs bcrypt jsonw
 #### Development Dependencies
 
 ```bash
-npm install -D @types/body-parser @types/config @types/cors @types/express @types/node @types/pino @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node-dev typescript @commitlint/config-conventional @commitlint/cli husky lint-staged prettier eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin @eslint/js globals typescript-eslint rimraf eslint-config-prettier eslint-plugin-prettier
+npm install -D @types/body-parser @types/config @types/cors @types/express @types/node @types/pino @types/bcrypt @types/jsonwebtoken @types/lodash @types/nanoid ts-node-dev typescript @commitlint/config-conventional @commitlint/cli husky lint-staged prettier eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin @eslint/js globals typescript-eslint rimraf eslint-config-prettier eslint-plugin-prettier tsx
 ```
 
 ## ⚙️ Configuration Files
