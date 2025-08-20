@@ -60,7 +60,7 @@ npm install -D @types/body-parser @types/config @types/cors @types/express @type
     "moduleResolution": "node",
     "lib": ["ES2020"],
     "outDir": "build",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -80,8 +80,8 @@ npm install -D @types/body-parser @types/config @types/cors @types/express @type
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+  "include": ["src/**/*", "config/**/*"],
+  "exclude": ["node_modules", "build", "**/*.test.ts", "**/*.spec.ts"]
 }
 ```
 
@@ -148,23 +148,36 @@ Automatically formats and lints staged files:
 ```
 rest-api/
 ├── src/
-│   ├── index.ts              # Main application entry
+│   ├── server.ts             # Main application entry
+│   ├── controllers/          # Request handlers
 │   ├── middleware/
 │   │   └── validateResource.ts # Zod validation middleware
+│   ├── models/               # Mongoose models
 │   ├── routes/
-│   │   └── index.ts          # API routes
+│   │   └── routes.ts         # API routes
+│   ├── schemas/              # Zod validation schemas
+│   ├── services/             # Business logic layer
+│   ├── types/                # TypeScript type definitions
 │   └── utils/
 │       ├── logger.ts         # Pino logger setup
-│       └── database.ts       # MongoDB connection
+│       ├── database.ts       # MongoDB connection
+│       ├── errors.ts         # Custom error classes
+│       ├── response.ts       # Response utilities
+│       ├── constants.ts      # Application constants
+│       └── health.ts         # Health check utilities
 ├── config/
 │   ├── default.ts            # Default configuration
-│   └── production.json       # Production configuration
+│   ├── development.ts        # Development configuration
+│   └── production.ts         # Production configuration
+├── doc/                      # Documentation files
 ├── .husky/                   # Git hooks
-├── build/                     # Build output (generated)
+├── build/                    # Build output (generated)
+├── logs/                     # Application logs (generated)
 ├── eslint.config.mts         # ESLint configuration
 ├── tsconfig.json             # TypeScript configuration
 ├── .prettierrc               # Prettier configuration
 ├── .prettierignore           # Prettier ignore patterns
+├── .env.example              # Environment variables template
 └── package.json              # Dependencies and scripts
 ```
 
@@ -172,15 +185,28 @@ rest-api/
 
 ### 1. Environment Setup
 
-Create environment-specific config files in the `config/` directory:
+The project uses the `config` package for environment-specific configuration.
 
-```json
-// config/development.json
-{
-  "mongoUri": "mongodb://localhost:27017/rest-api-dev",
-  "jwtSecret": "your-dev-jwt-secret"
-}
+#### Configuration Files:
+
+- `config/default.ts` - Default configuration
+- `config/development.ts` - Development overrides
+- `config/production.ts` - Production configuration (uses environment variables)
+
+#### Environment Variables:
+
+Copy `.env.example` to `.env` and update the values:
+
+```bash
+cp .env.example .env
 ```
+
+Key environment variables for production:
+
+- `NODE_ENV` - Environment (development/production)
+- `PORT` - Server port
+- `MONGO_URI` - MongoDB connection string
+- `JWT_SECRET` - JWT signing secret
 
 ### 2. Start Development
 
@@ -189,7 +215,7 @@ Create environment-specific config files in the `config/` directory:
 npm run dev
 
 # The server will start on http://localhost:3000
-# Health check available at http://localhost:3000/health
+# Health check available at http://localhost:3000/health-check
 ```
 
 ### 3. Build for Production
