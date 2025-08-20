@@ -12,6 +12,7 @@
   "scripts": {
     "prepare": "husky",
     "dev": "tsx watch src/server.ts",
+    "dev:debug": "tsx watch --inspect src/server.ts",
     "start": "node build/server.js",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.js",
@@ -19,10 +20,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build": "tsc",
+    "build:watch": "tsc --watch",
     "clean": "rimraf build",
     "prebuild": "npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "check-all": "npm run type-check && npm run lint && npm run format:check"
+    "check-all": "npm run type-check && npm run lint && npm run format:check",
+    "health": "curl -f http://localhost:3000/health-check || exit 1"
   },
   "lint-staged": {
     "*.{ts,js}": [
