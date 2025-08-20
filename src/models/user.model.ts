@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import config from 'config';
 import mongoose from 'mongoose';
 import type { IUser, IUserModel, IUserTransform } from '../types/user.types';
+import { UserRole, UserStatus } from '../types/user.types';
 import logger from '../utils/logger';
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -33,6 +34,16 @@ const userSchema = new mongoose.Schema<IUser>(
       minlength: [8, 'Password must be at least 8 characters long'],
       select: false, // Don't include password in queries by default
     },
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.USER,
+    },
+    status: {
+      type: String,
+      enum: Object.values(UserStatus),
+      default: UserStatus.ACTIVE,
+    },
   },
   {
     timestamps: true,
@@ -45,6 +56,8 @@ const userSchema = new mongoose.Schema<IUser>(
           id: ret['_id'] as string,
           email: ret['email'] as string,
           name: ret['name'] as string,
+          role: ret['role'] as string,
+          status: ret['status'] as string,
           createdAt: ret['createdAt'] as Date,
           updatedAt: ret['updatedAt'] as Date,
         };
@@ -60,6 +73,8 @@ const userSchema = new mongoose.Schema<IUser>(
           id: ret['_id'] as string,
           email: ret['email'] as string,
           name: ret['name'] as string,
+          role: ret['role'] as string,
+          status: ret['status'] as string,
           createdAt: ret['createdAt'] as Date,
           updatedAt: ret['updatedAt'] as Date,
         };

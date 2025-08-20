@@ -140,6 +140,7 @@ Defines **Zod validation schemas** for user input, ensuring data correctness at 
    - Ensures `id` param is valid MongoId
 
 4. **Delete User Validation**
+
    ```ts
    export const deleteUserValidation = {
      params: z.object({

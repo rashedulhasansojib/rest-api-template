@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserRole, UserStatus } from '../types/user.types';
 
 /**
  * Common reusable schemas
@@ -40,6 +41,16 @@ const mongoIdSchema = z
   .string()
   .regex(/^[0-9a-fA-F]{24}$/, { message: 'Invalid MongoDB ObjectId' });
 
+// Role validation schema
+const roleSchema = z.nativeEnum(UserRole, {
+  message: 'Role must be user, admin, or moderator',
+});
+
+// Status validation schema
+const statusSchema = z.nativeEnum(UserStatus, {
+  message: 'Status must be active, inactive, or suspended',
+});
+
 /**
  * User validation schemas
  */
@@ -52,6 +63,7 @@ export const createUserValidation = {
       email: emailSchema,
       password: passwordSchema,
       confirmPassword: z.string(),
+      role: roleSchema.optional(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords don't match",
@@ -65,6 +77,8 @@ export const updateUserValidation = {
     .object({
       name: nameSchema.optional(),
       email: emailSchema.optional(),
+      role: roleSchema.optional(),
+      status: statusSchema.optional(),
     })
     .refine((data) => Object.keys(data).length > 0, {
       message: 'At least one field must be provided for update',

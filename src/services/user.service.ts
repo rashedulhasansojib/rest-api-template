@@ -26,7 +26,13 @@ export const createUser = async (
       throw new UserAlreadyExistsError('User with this email already exists');
     }
 
-    const user = await UserModel.create(input);
+    // Set default role if not provided
+    const userData = {
+      ...input,
+      role: input.role ?? 'user',
+    };
+
+    const user = await UserModel.create(userData);
     logger.info(`User created successfully: ${user.email}`);
 
     return user.toJSON() as IUserResponse;

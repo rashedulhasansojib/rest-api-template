@@ -450,14 +450,41 @@ app.put('/users/:id', validate(userSchema), updateUser);
 }
 ```
 
+## 🔐 Authentication & Authorization
+
+The API includes a complete JWT-based authentication system with role-based access control:
+
+### Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **Role-Based Access Control**: User, Moderator, Admin roles
+- **Account Status Management**: Active, Inactive, Suspended states
+- **Protected Routes**: Middleware-based route protection
+- **Token Refresh**: Automatic token renewal capability
+
+### Authentication Endpoints
+
+- `POST /api/auth/login` - User login
+- `GET /api/auth/me` - Get current user profile
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/refresh` - Refresh JWT token
+
+### User Roles & Permissions
+
+- **User**: Basic access, can manage own profile
+- **Moderator**: Can view all users, moderate content
+- **Admin**: Full system access, user management
+
+See [Authentication Guide](doc/authentication_guide.md) for detailed usage examples.
+
 ## 🚀 Next Steps
 
-1. **Add Authentication**: Implement JWT-based auth routes
-2. **Add Testing**: Set up Jest or Vitest for unit tests
-3. **Add Documentation**: Generate API docs with Swagger
-4. **Add Monitoring**: Implement health checks and metrics
-5. **Add Rate Limiting**: Protect against abuse
-6. **Add CORS Configuration**: Configure for your frontend
+1. **Add Testing**: Set up Jest or Vitest for unit tests
+2. **Add Documentation**: Generate API docs with Swagger
+3. **Add Rate Limiting**: Protect against abuse (configured but not applied)
+4. **Add Email Verification**: Implement email confirmation for new accounts
+5. **Add Password Reset**: Implement forgot password functionality
+6. **Add Audit Logging**: Track user actions and system events
 
 ## 📄 License
 
